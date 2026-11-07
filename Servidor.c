@@ -17,13 +17,6 @@
 
 
 
-void finHijo(int n){
-    wait(NULL);
-    signal(SIGCHLD, finHijo);
-}
-
-
-
 
 //lee Google.html por bloques y los envia al cliente
 void transferir(int cliente){
@@ -118,7 +111,7 @@ int main(){
 
     conector= crear_conector();
 
-    signal(SIGCHLD, finHijo);
+    signal(SIGCHLD, SIG_IGN);
 
     printf("Servidor escuchando en el puerto %d\n", PUERTO);
 
