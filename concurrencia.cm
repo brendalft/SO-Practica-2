@@ -1,0 +1,120 @@
+#include "gdefs.cm"
+
+const int TAM_BUFFER=5;
+
+int buffer[TAM_BUFFER];
+
+int pos_productor=0;
+int pos_consumidor=0;
+
+semaphore s;
+semaphore n;
+semaphore e;
+
+
+
+const int bloque1=1;
+const int bloque2=2;
+const int bloque3=3;
+const int bloque4=4;
+const int bloque5=5;
+
+
+void productor(){
+    int x;
+    x=0;
+
+    while(1){
+
+        x=x+1;
+
+        wait(e);
+        wait(s);
+
+        buffer[pos_productor]=x;
+
+        if(pos_productor==0){
+            changecolor(bloque1, MAGENTA);
+        }
+        if(pos_productor==1){
+            changecolor(bloque2, MAGENTA);
+        }
+
+        if(pos_productor==2){
+            changecolor(bloque3, MAGENTA);
+        }
+
+        if(pos_productor==3){
+            changecolor(bloque4, MAGENTA);
+        }
+
+        if(pos_productor==4){
+            changecolor(bloque5, MAGENTA);
+        }
+
+        pos_productor=(pos_productor+1)% TAM_BUFFER;
+
+        signal(s);
+        signal(n);
+    }
+}
+
+
+void consumidor(){
+
+    int x;
+
+    while(1){
+
+        wait(n);
+        wait(s);
+
+        x=buffer[pos_consumidor];
+
+
+
+        if(pos_consumidor==0){
+            changecolor(bloque1, WHITE);
+        }
+        if(pos_consumidor==1){
+            changecolor(bloque2, WHITE);
+        }
+
+        if(pos_consumidor==2){
+            changecolor(bloque3, WHITE);
+        }
+
+        if(pos_consumidor==3){
+            changecolor(bloque4, WHITE);
+        }
+
+        if(pos_consumidor==4){
+            changecolor(bloque5, WHITE);
+        }
+
+        pos_consumidor=(pos_consumidor+1)%TAM_BUFFER;
+
+        signal(s);
+        signal(e);
+    }
+}
+
+
+void main(){
+
+    initialsem(s, 1);
+    initialsem(n, 0);
+    initialsem(e, TAM_BUFFER);
+
+    create(bloque1, RECTANGLE, WHITE, 80, 150, 50, 50);
+    create(bloque2, RECTANGLE, WHITE, 150, 150, 50, 50);
+    create(bloque3, RECTANGLE, WHITE, 220, 150, 50, 50);
+    create(bloque4, RECTANGLE, WHITE, 290, 150, 50, 50);
+    create(bloque5, RECTANGLE, WHITE, 360, 150, 50, 50);
+
+    cobegin{
+        productor();
+        consumidor();
+    }
+
+}
