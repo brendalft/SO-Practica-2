@@ -67,7 +67,7 @@ int crear_conector(){
     dir_servidor.sin_port= htons(PUERTO);
 
     if(bind(conector, (struct sockaddr*)& dir_servidor, sizeof(dir_servidor))<0){
-        perror("Error en bind");;
+        perror("Error en bind");
         exit(1);
     }
 
